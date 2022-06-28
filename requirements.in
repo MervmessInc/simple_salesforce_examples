@@ -1,3 +1,5 @@
 requests
 simple_salesforce
 tqdm
+tabulate
+xlsxwriter

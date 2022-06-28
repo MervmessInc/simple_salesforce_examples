@@ -49,9 +49,13 @@ six==1.16.0
     # via
     #   isodate
     #   requests-file
+tabulate==0.8.10
+    # via -r requirements.in
 tqdm==4.64.0
     # via -r requirements.in
 urllib3==1.26.9
     # via requests
+xlsxwriter==3.0.3
+    # via -r requirements.in
 zeep==4.1.0
     # via simple-salesforce
