@@ -3,11 +3,10 @@ import logging
 import requests
 import sys
 
-from pprint import pprint
 from simple_salesforce import Salesforce
 from tqdm import tqdm
 
-logging.basicConfig(format="%(asctime)s %(message)s", level=logging.ERROR)
+logging.basicConfig(format="%(asctime)s : %(message)s", level=logging.ERROR)
 
 #
 # sf_credentials = (
@@ -24,6 +23,15 @@ custom_field_name = "Archive_Id"
 
 
 def build_custom_field(sf: Salesforce, object_name: str):
+    """build_custom_field(sf: Salesforce, object_name: str)
+
+    Args:
+        sf (Salesforce): simple_salesforce Salesforce Client
+        object_name (str): name of the sObject
+
+    Returns:
+       custom_field: sf.mdapi.CustomField
+    """
     custom_field = sf.mdapi.CustomField(
         fullName=f"{object_name}.{custom_field_name}__c",
         businessOwnerGroup=None,
@@ -90,12 +98,14 @@ def build_custom_field(sf: Salesforce, object_name: str):
 
 
 def salesforce_login(creds: list):
-    """salesforce_login()
+    """salesforce_login(creds: list)
+
+    Args:
+        creds (list): sf_credentials
 
     Returns:
-        simple_salesforce.Salesforce: sf Salesforce client objects.
+        sf (Salesforce): simple_salesforce Salesforce Client
     """
-
     sf = Salesforce(
         instance=creds[0],
         session_id=creds[1],
@@ -110,13 +120,23 @@ def salesforce_login(creds: list):
 
 
 def create_custom_field(sf: Salesforce, object_name: str):
+    """create_custom_field(sf: Salesforce, object_name: str)
+
+    Args:
+        sf (Salesforce): simple_salesforce Salesforce Client
+        object_name (str): name of the sObject
+    """
     meta_field = build_custom_field(sf, object_name)
     sf.mdapi.CustomField.create(meta_field)
 
 
 def delete_custom_field(sf: Salesforce, object_name: str):
-    # custom_field = sf.mdapi.CustomField.read(f"{object_name}.{custom_field_name}__c")
-    # pprint(custom_field)
+    """delete_custom_field(sf: Salesforce, object_name: str)
+
+    Args:
+        sf (Salesforce): simple_salesforce Salesforce Client
+        object_name (str): name of the sObject
+    """
     sf.mdapi.CustomField.delete(f"{object_name}.{custom_field_name}__c")
 
 
@@ -153,8 +173,11 @@ def main():
 
         pbar.close()
 
-    pprint(s_out)
-    # pprint(custom_objects)
+    for message in s_out:
+        logging.error(f"ERROR ~ {str(message['error']).strip()}")
+
+    for message in custom_objects:
+        logging.info(f"INFO ~ Processed {str(message['name']).strip()}")
 
 
 if __name__ == "__main__":
