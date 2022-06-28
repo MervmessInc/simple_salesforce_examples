@@ -1,1 +1,1 @@
-# simple_salesforce-mdapi_examples
+# simple_salesforce_examples
