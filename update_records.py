@@ -47,7 +47,7 @@ def salesforce_login(creds: list):
         return None
 
 
-def main():
+def update():
     sf = salesforce_login(sf_credentials)
 
     custom_objects = []
@@ -124,4 +124,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    update()

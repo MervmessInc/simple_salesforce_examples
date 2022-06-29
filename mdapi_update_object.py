@@ -6,6 +6,8 @@ import sys
 from simple_salesforce import Salesforce
 from tqdm import tqdm
 
+from utils import salesforce_login as login
+
 logging.basicConfig(format="%(asctime)s : %(message)s", level=logging.ERROR)
 
 #
@@ -97,28 +99,6 @@ def build_custom_field(sf: Salesforce, object_name: str):
     return custom_field
 
 
-def salesforce_login(creds: list):
-    """salesforce_login(creds: list)
-
-    Args:
-        creds (list): sf_credentials
-
-    Returns:
-        sf (Salesforce): simple_salesforce Salesforce Client
-    """
-    sf = Salesforce(
-        instance=creds[0],
-        session_id=creds[1],
-    )
-
-    # Test to see if we have a working session.
-    try:
-        sf.is_sandbox()
-        return sf
-    except Exception:
-        return None
-
-
 def create_custom_field(sf: Salesforce, object_name: str):
     """create_custom_field(sf: Salesforce, object_name: str)
 
@@ -140,17 +120,10 @@ def delete_custom_field(sf: Salesforce, object_name: str):
     sf.mdapi.CustomField.delete(f"{object_name}.{custom_field_name}__c")
 
 
-def main():
-    sf = salesforce_login(sf_credentials)
+def update_object(sf: Salesforce):
 
     custom_objects = []
     s_out = []
-
-    if not sf:
-        print("\n*** Not Logged into Salesforce ***\n")
-        sys.exit(1)
-
-    print("\n*** Logged into Salesforce ***\n")
 
     r = requests.get(f"{sf.base_url}sobjects", headers=sf.headers)
     pyObj = json.loads(r.content)
@@ -181,4 +154,12 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sf = login(sf_credentials)
+
+    if not sf:
+        print("\n*** Not Logged into Salesforce ***\n")
+        sys.exit(1)
+
+    print("\n*** Logged into Salesforce ***\n")
+
+    update_object(sf)
