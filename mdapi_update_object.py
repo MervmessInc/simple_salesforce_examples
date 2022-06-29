@@ -123,7 +123,7 @@ def delete_custom_field(sf: Salesforce, object_name: str):
 def update_object(sf: Salesforce):
 
     custom_objects = []
-    s_out = []
+    s_err = []
 
     r = requests.get(f"{sf.base_url}sobjects", headers=sf.headers)
     pyObj = json.loads(r.content)
@@ -141,13 +141,17 @@ def update_object(sf: Salesforce):
                 create_custom_field(sf, sobj["name"])
                 # delete_custom_field(sf, sobj["name"])
             except Exception as e:
-                s_out.append({"sobject": sobj["name"], "error": e})
+                s_err.append({"sobject": sobj["name"], "error": e})
                 # raise
 
         pbar.close()
+        print()
 
-    for message in s_out:
-        logging.error(f"ERROR ~ {str(message['error']).strip()}")
+    if s_err:
+        for message in s_err:
+            logging.error(f"ERROR ~ {str(message['error']).strip()}")
+
+        raise Exception("Update Objects ERROR")
 
     for message in custom_objects:
         logging.info(f"INFO ~ Processed {str(message['name']).strip()}")

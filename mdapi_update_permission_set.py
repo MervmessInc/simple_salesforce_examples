@@ -21,7 +21,7 @@ sf_credentials = (
     "",
 )
 
-custom_field_name = "Archive_Id__c"
+custom_field_name = "Archive_Id"
 
 
 def build_object_permissions(sf: Salesforce, object_name: str):
@@ -40,7 +40,7 @@ def build_object_permissions(sf: Salesforce, object_name: str):
 def build_field_permissions(sf: Salesforce, object_name: str):
     field_permissions = sf.mdapi.PermissionSetFieldPermissions(
         editable=True,
-        field=f"{object_name}.{custom_field_name}",
+        field=f"{object_name}.{custom_field_name}__c",
         readable=True,
     )
     return field_permissions
@@ -49,7 +49,7 @@ def build_field_permissions(sf: Salesforce, object_name: str):
 def update_permission_set(sf: Salesforce):
 
     custom_objects = []
-    s_out = []
+    s_err = []
 
     r = requests.get(f"{sf.base_url}sobjects", headers=sf.headers)
     pyObj = json.loads(r.content)
@@ -69,13 +69,16 @@ SELECT Id, Name, IsCustom, NamespacePrefix
 From PermissionSet
 Where IsCustom = True
 AND NamespacePrefix = ''
-AND Name = 'Update_Archive_Id_c'
+AND Name = 'Update_Archive_Id'
 """
         )
         permission_sets = sf.query(query_str)
 
     except sf_exceptions.SalesforceMalformedRequest:
         raise
+
+    if not permission_sets["records"]:
+        raise Exception("Missing Permission Set")
 
     for pset in permission_sets["records"]:
         permission_set = sf.mdapi.PermissionSet.read(pset["Name"])
@@ -92,11 +95,14 @@ AND Name = 'Update_Archive_Id_c'
         try:
             sf.mdapi.PermissionSet.update(permission_set)
         except Exception as e:
-            s_out.append({"permissionset": permission_set["fullName"], "error": e})
+            s_err.append({"permissionset": permission_set["fullName"], "error": e})
             # raise
 
-    for message in s_out:
-        logging.error(f"ERROR ~ {str(message['error']).strip()}")
+    if s_err:
+        for message in s_err:
+            logging.error(f"ERROR ~ {str(message['error']).strip()}")
+
+        raise Exception("Update Permission Set ERROR")
 
 
 if __name__ == "__main__":
