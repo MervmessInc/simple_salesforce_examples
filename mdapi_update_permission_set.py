@@ -6,6 +6,7 @@ import sys
 
 from simple_salesforce import Salesforce, format_soql
 
+from utils import salesforce_login as login
 
 logging.basicConfig(format="%(asctime)s : %(message)s", level=logging.ERROR)
 
@@ -21,28 +22,6 @@ sf_credentials = (
 )
 
 custom_field_name = "Archive_Id__c"
-
-
-def salesforce_login(creds: list):
-    """salesforce_login(creds: list)
-
-    Args:
-        creds (list): sf_credentials
-
-    Returns:
-        sf (Salesforce): simple_salesforce Salesforce Client
-    """
-    sf = Salesforce(
-        instance=creds[0],
-        session_id=creds[1],
-    )
-
-    # Test to see if we have a working session.
-    try:
-        sf.is_sandbox()
-        return sf
-    except Exception:
-        return None
 
 
 def build_object_permissions(sf: Salesforce, object_name: str):
@@ -67,15 +46,10 @@ def build_field_permissions(sf: Salesforce, object_name: str):
     return field_permissions
 
 
-def main():
-    sf = salesforce_login(sf_credentials)
+def update_permission_set(sf: Salesforce):
 
     custom_objects = []
     s_out = []
-
-    if not sf:
-        print("\n*** Not Logged into Salesforce ***\n")
-        sys.exit(1)
 
     r = requests.get(f"{sf.base_url}sobjects", headers=sf.headers)
     pyObj = json.loads(r.content)
@@ -126,4 +100,12 @@ AND Name = 'Update_Archive_Id_c'
 
 
 if __name__ == "__main__":
-    main()
+    sf = login(sf_credentials)
+
+    if not sf:
+        print("\n*** Not Logged into Salesforce ***\n")
+        sys.exit(1)
+
+    print("\n*** Logged into Salesforce ***\n")
+
+    update_permission_set(sf)
