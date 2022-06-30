@@ -1,6 +1,4 @@
-import json
 import logging
-import requests
 import sys
 
 from simple_salesforce import Salesforce
@@ -45,7 +43,7 @@ def build_custom_field(sf: Salesforce, object_name: str):
         defaultValue=None,
         deleteConstraint=None,
         deprecated=None,
-        description=None,
+        description="External System ID",
         displayFormat=None,
         encryptionScheme=None,
         escapeMarkup=None,
@@ -125,10 +123,9 @@ def update_object(sf: Salesforce):
     custom_objects = []
     s_err = []
 
-    r = requests.get(f"{sf.base_url}sobjects", headers=sf.headers)
-    pyObj = json.loads(r.content)
+    describe_response = sf.describe()
 
-    for sobj in pyObj["sobjects"]:
+    for sobj in describe_response["sobjects"]:
         if sobj["custom"] and sobj["name"][-3:] == "__c":
             custom_objects.append({"name": sobj["name"]})
 

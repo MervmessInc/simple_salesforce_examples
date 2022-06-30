@@ -1,6 +1,4 @@
-import json
 import logging
-import requests
 import simple_salesforce.exceptions as sf_exceptions
 import sys
 
@@ -51,10 +49,9 @@ def update_permission_set(sf: Salesforce):
     custom_objects = []
     s_err = []
 
-    r = requests.get(f"{sf.base_url}sobjects", headers=sf.headers)
-    pyObj = json.loads(r.content)
+    describe_response = sf.describe()
 
-    for sobj in pyObj["sobjects"]:
+    for sobj in describe_response["sobjects"]:
         if (
             sobj["custom"]
             and sobj["name"][-3:] == "__c"
@@ -69,7 +66,7 @@ SELECT Id, Name, IsCustom, NamespacePrefix
 From PermissionSet
 Where IsCustom = True
 AND NamespacePrefix = ''
-AND Name = 'Update_Archive_Id'
+AND Name = 'Update_{custom_field_name}'
 """
         )
         permission_sets = sf.query(query_str)
@@ -94,6 +91,7 @@ AND Name = 'Update_Archive_Id'
 
         try:
             sf.mdapi.PermissionSet.update(permission_set)
+
         except Exception as e:
             s_err.append({"permissionset": permission_set["fullName"], "error": e})
             # raise
