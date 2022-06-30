@@ -1,7 +1,5 @@
-import json
 import logging
 import pprint
-import requests
 import simple_salesforce.exceptions as sf_exceptions
 import sys
 import uuid
@@ -34,10 +32,9 @@ def update(sf: Salesforce):
     s_err = []
     row_set = []
 
-    r = requests.get(f"{sf.base_url}sobjects", headers=sf.headers)
-    pyObj = json.loads(r.content)
+    describe_response = sf.describe()
 
-    for sobj in pyObj["sobjects"]:
+    for sobj in describe_response["sobjects"]:
         if sobj["custom"] and sobj["name"][-3:] == "__c":
             custom_objects.append({"name": sobj["name"]})
 
@@ -91,7 +88,7 @@ def update(sf: Salesforce):
     print("\n*** Processing completed ***\n")
     for msg in s_out:
         pretty = pprint.pformat(msg["results"], indent=2, width=80)
-        print(f"sObject: {msg['sobject']} ~\n{pretty}")
+        logging.info(f"sObject: {msg['sobject']} ~\n{pretty}")
 
     print("\n*** Errors ***\n")
     for message in s_err:
