@@ -158,11 +158,11 @@ def update_object(sf: Salesforce):
         raise Exception("Update Objects ERROR")
 
     with open(f"{package_name}_retrieve.sh", "w") as f:
-    for message in custom_objects:
-        logging.info(f"INFO ~ Processed {str(message['name']).strip()}")
+        for message in custom_objects:
+            logging.info(f"INFO ~ Processed {str(message['name']).strip()}")
             f.write(
                 f"sfdx force:source:retrieve -m \"CustomField:{str(message['name']).strip()}.{custom_field_name}__c\" -t\n"
-        )
+            )
 
 
 if __name__ == "__main__":
