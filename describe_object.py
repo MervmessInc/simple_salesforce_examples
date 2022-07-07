@@ -20,6 +20,8 @@ sf_credentials = (
     "",
 )
 
+exclude = ["fHCM2__", "fRecruit__"]
+
 
 def describe_object(sf: Salesforce):
 
@@ -30,7 +32,11 @@ def describe_object(sf: Salesforce):
     describe_response = sf.describe()
 
     for sobj in describe_response["sobjects"]:
-        if sobj["custom"] and sobj["name"][-3:] == "__c":
+        if (
+            sobj["custom"]
+            and sobj["name"][-3:] == "__c"
+            and not any(substring in sobj["name"] for substring in exclude)
+        ):
             custom_objects.append({"name": sobj["name"]})
 
     if custom_objects:

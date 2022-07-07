@@ -131,3 +131,5 @@ dmypy.json
 # project specific stuff
 org_list.json
 *.xlsx
+fDL_retrieve.sh
+IM_retrieve.sh
