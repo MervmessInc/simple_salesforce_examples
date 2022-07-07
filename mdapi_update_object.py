@@ -6,7 +6,7 @@ from tqdm import tqdm
 
 from utils import salesforce_login as login
 
-logging.basicConfig(format="%(asctime)s : %(message)s", level=logging.ERROR)
+logging.basicConfig(format="%(asctime)s : %(message)s", level=logging.INFO)
 
 #
 # sf_credentials = (
@@ -19,6 +19,8 @@ sf_credentials = (
     "",
 )
 
+exclude = ["fHCM2__", "fRecruit__"]
+package_name = "fDL"
 custom_field_name = "Archive_Id"
 
 
@@ -126,7 +128,11 @@ def update_object(sf: Salesforce):
     describe_response = sf.describe()
 
     for sobj in describe_response["sobjects"]:
-        if sobj["custom"] and sobj["name"][-3:] == "__c":
+        if (
+            sobj["custom"]
+            and sobj["name"][-3:] == "__c"
+            and not any(substring in sobj["name"] for substring in exclude)
+        ):
             custom_objects.append({"name": sobj["name"]})
 
     if custom_objects:
@@ -137,6 +143,7 @@ def update_object(sf: Salesforce):
             try:
                 create_custom_field(sf, sobj["name"])
                 # delete_custom_field(sf, sobj["name"])
+
             except Exception as e:
                 s_err.append({"sobject": sobj["name"], "error": e})
                 # raise
@@ -150,8 +157,12 @@ def update_object(sf: Salesforce):
 
         raise Exception("Update Objects ERROR")
 
+    with open(f"{package_name}_retrieve.sh", "w") as f:
     for message in custom_objects:
         logging.info(f"INFO ~ Processed {str(message['name']).strip()}")
+            f.write(
+                f"sfdx force:source:retrieve -m \"CustomField:{str(message['name']).strip()}.{custom_field_name}__c\" -t\n"
+        )
 
 
 if __name__ == "__main__":
