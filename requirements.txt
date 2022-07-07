@@ -16,8 +16,6 @@ cffi==1.15.0
     # via cryptography
 charset-normalizer==2.0.12
     # via requests
-colorama==0.4.5
-    # via tqdm
 cryptography==37.0.2
     # via authlib
 idna==3.3
@@ -32,7 +30,7 @@ pycparser==2.21
     # via cffi
 pytz==2022.1
     # via zeep
-requests==2.28.0
+requests==2.28.1
     # via
     #   -r requirements.in
     #   requests-file
