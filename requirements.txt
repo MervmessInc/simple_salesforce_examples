@@ -10,7 +10,7 @@ authlib==1.0.1
     # via simple-salesforce
 cached-property==1.5.2
     # via zeep
-certifi==2022.6.15
+certifi==2022.12.7
     # via requests
 cffi==1.15.0
     # via cryptography
