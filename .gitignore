@@ -136,3 +136,4 @@ IM_retrieve.sh
 IM_Config_Library_Id_query.txt
 .history/
 *.bak
+*.csv
