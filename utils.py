@@ -1,23 +1,28 @@
+import logging
+
 from simple_salesforce import Salesforce
 
 
-def salesforce_login(creds: list):
+def salesforce_login(creds: list) -> Salesforce:
     """salesforce_login(creds: list)
 
     Args:
-        creds (list): sf_credentials
+        creds (list): Salesforce instance & Bearer Token
 
     Returns:
-        sf (Salesforce): simple_salesforce Salesforce Client
+        Salesforce: An instance of Salesforce, a handy way to wrap a Salesforce session
+                    for easy use of the Salesforce REST API.
     """
-    sf = Salesforce(
-        instance=creds[0],
-        session_id=creds[1],
-    )
-
-    # Test to see if we have a working session.
     try:
+        sf = Salesforce(
+            instance=creds[0],
+            session_id=creds[1],
+            version="55.0",
+        )
+
         sf.is_sandbox()
         return sf
-    except Exception:
+
+    except Exception as e:
+        logging.error(e)
         return None
