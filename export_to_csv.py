@@ -1,10 +1,12 @@
 import json
 import logging
+import pandas as pd
 import pprint
 import requests
 import sys
 import time
 
+from io import StringIO
 from simple_salesforce import Salesforce
 
 from utils import salesforce_login as login
@@ -150,8 +152,9 @@ def main():
 
             csv = result.text
 
-            with open(f"{job['object_name']}.csv", "w", encoding="utf-8") as file:
-                file.write(csv)
+            df = pd.read_csv(StringIO(csv))
+            df.dropna(how="all", axis=1, inplace=True)
+            df.to_csv(f"{job['object_name']}.csv", encoding="utf-8", index=False)
 
             line_count = 0
             for line in csv.splitlines():
