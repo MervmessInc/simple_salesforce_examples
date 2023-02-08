@@ -16,9 +16,7 @@ cffi==1.15.0
     # via cryptography
 charset-normalizer==2.0.12
     # via requests
-colorama==0.4.6
-    # via tqdm
-cryptography==37.0.2
+cryptography==39.0.1
     # via authlib
 idna==3.3
     # via requests
