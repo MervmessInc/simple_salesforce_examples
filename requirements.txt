@@ -16,8 +16,6 @@ cffi==1.15.0
     # via cryptography
 charset-normalizer==2.0.12
     # via requests
-colorama==0.4.6
-    # via tqdm
 cryptography==37.0.2
     # via authlib
 idna==3.3
@@ -64,7 +62,7 @@ tqdm==4.64.0
     # via -r requirements.in
 urllib3==1.26.9
     # via requests
-xlsxwriter==3.0.3
+xlsxwriter==3.0.9
     # via -r requirements.in
 zeep==4.1.0
     # via simple-salesforce
