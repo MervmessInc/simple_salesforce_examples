@@ -74,7 +74,7 @@ def describe_object(sf: Salesforce):
                     )
 
             except Exception as e:
-                s_err.append({"sobject": sobj["name"], "error": e})
+                s_err.append({"sobject": row["name"], "error": e})
                 raise
 
         pbar.close()
