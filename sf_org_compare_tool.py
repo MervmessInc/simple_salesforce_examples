@@ -1,10 +1,12 @@
 import json
+import os
 import requests
 import simple_salesforce.exceptions as sf_exceptions
 import sys
 import tabulate as tb
 import xlsxwriter
 
+from dotenv import load_dotenv
 from simple_salesforce import Salesforce, format_soql
 from tqdm import tqdm
 
@@ -14,10 +16,10 @@ from tqdm import tqdm
 #    "<session_id>",
 # )
 #
-
+load_dotenv()
 sf1_credentials = (
-    "",
-    "",
+    f"{os.getenv('SALESFORCE_INSTANCE_URL')}",
+    f"{os.getenv('SALESFORCE_TOKEN')}",
 )
 
 sf2_credentials = (

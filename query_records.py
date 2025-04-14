@@ -1,7 +1,9 @@
 import logging
+import os
 import simple_salesforce.exceptions as sf_exceptions
 import sys
 
+from dotenv import load_dotenv
 from simple_salesforce import Salesforce, format_soql
 from tqdm import tqdm
 
@@ -15,9 +17,10 @@ logging.basicConfig(format="%(asctime)s : %(message)s", level=logging.ERROR)
 #    "<session_id>",
 # )
 #
+load_dotenv()
 sf_credentials = (
-    "",
-    "",
+    f"{os.getenv('SALESFORCE_INSTANCE_URL')}",
+    f"{os.getenv('SALESFORCE_TOKEN')}",
 )
 
 custom_field_name = "IM_Config_Library_Id"

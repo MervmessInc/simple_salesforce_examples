@@ -1,11 +1,13 @@
 import json
 import logging
+import os
 import pandas as pd
 import pprint
 import requests
 import sys
 import time
 
+from dotenv import load_dotenv
 from io import StringIO
 from simple_salesforce import Salesforce
 
@@ -83,8 +85,8 @@ def main():
     """
     sf = login(
         (
-            "",
-            "",
+            f"{os.getenv('SALESFORCE_INSTANCE_URL')}",
+            f"{os.getenv('SALESFORCE_TOKEN')}",
         )
     )
 
