@@ -1,10 +1,10 @@
 import logging
-import pprint
+import pandas as pd
 import sys
 
+from dotenv import load_dotenv
 from simple_salesforce import Salesforce
 from tqdm import tqdm
-
 from utils import salesforce_login as login
 
 logging.basicConfig(format="%(asctime)s : %(message)s", level=logging.ERROR)
@@ -15,12 +15,13 @@ logging.basicConfig(format="%(asctime)s : %(message)s", level=logging.ERROR)
 #    "<session_id>",
 # )
 #
+load_dotenv()
 sf_credentials = (
-    "",
-    "",
+    f"{os.getenv('SALESFORCE_INSTANCE_URL')}",
+    f"{os.getenv('SALESFORCE_TOKEN')}",
 )
 
-exclude = ["fHCM2__", "fRecruit__"]
+exclude = []
 
 
 def describe_object(sf: Salesforce):
@@ -31,13 +32,25 @@ def describe_object(sf: Salesforce):
 
     describe_response = sf.describe()
 
-    for sobj in describe_response["sobjects"]:
-        if (
-            sobj["custom"]
-            and sobj["name"][-3:] == "__c"
-            and not any(substring in sobj["name"] for substring in exclude)
-        ):
-            custom_objects.append({"name": sobj["name"]})
+    # for sobj in describe_response["sobjects"]:
+    #    if (
+    #        sobj["custom"]
+    #        and sobj["name"][-3:] == "__c"
+    #        and not any(substring in sobj["name"] for substring in exclude)
+    #    ):
+    #        custom_objects.append({"name": sobj["name"]})
+    custom_objects.append(
+        {"name": "Opportunity"}
+    )  # Add Risk_Binder_Section__c to the list of objects to describe
+    custom_objects.append(
+        {"name": "Quote"}
+    )  # Add Premium_Share_Tax_Jur_Level__c to the list of objects to describe
+    custom_objects.append(
+        {"name": "QuoteLineItem"}
+    )  # Add QuoteLineItem to the list of objects to describe
+    custom_objects.append(
+        {"name": "InsurancePolicy"}
+    )  # Add InsurancePolicy to the list of objects to describe
 
     if custom_objects:
         pbar = tqdm(total=len(custom_objects), desc="sf", ncols=100)
@@ -65,9 +78,8 @@ def describe_object(sf: Salesforce):
 
         pbar.close()
 
-    for msg in s_out:
-        pretty = pprint.pformat(msg, indent=2, width=80)
-        print(f"\n{msg}")
+    df = pd.DataFrame(s_out)
+    df.to_csv("sObject.csv", index=False)
 
     for message in s_err:
         logging.error(f"ERROR ~ {str(message['error']).strip()}")

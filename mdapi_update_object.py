@@ -1,6 +1,7 @@
 import logging
 import sys
 
+from dotenv import load_dotenv
 from simple_salesforce import Salesforce
 from tqdm import tqdm
 
@@ -14,9 +15,10 @@ logging.basicConfig(format="%(asctime)s : %(message)s", level=logging.INFO)
 #    "<session_id>",
 # )
 #
+load_dotenv()
 sf_credentials = (
-    "",
-    "",
+    f"{os.getenv('SALESFORCE_INSTANCE_URL')}",
+    f"{os.getenv('SALESFORCE_TOKEN')}",
 )
 
 exclude = ["fHCM2__", "fRecruit__"]
