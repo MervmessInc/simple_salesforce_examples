@@ -24,7 +24,7 @@ more-itertools==10.6.0
     # via simple-salesforce
 numpy==2.2.4
     # via pandas
-pandas==2.2.3
+pandas==2.3.0
     # via -r requirements.in
 platformdirs==4.3.7
     # via zeep
