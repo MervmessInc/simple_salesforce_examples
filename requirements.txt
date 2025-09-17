@@ -34,7 +34,7 @@ pyjwt[crypto]==2.10.1
     # via simple-salesforce
 python-dateutil==2.9.0.post0
     # via pandas
-python-dotenv==1.1.0
+python-dotenv==1.1.1
     # via -r requirements.in
 pytz==2025.2
     # via
