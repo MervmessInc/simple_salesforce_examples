@@ -51,7 +51,7 @@ requests-file==2.1.0
     # via zeep
 requests-toolbelt==1.0.0
     # via zeep
-simple-salesforce==1.12.6
+simple-salesforce==1.12.9
     # via -r requirements.in
 six==1.17.0
     # via python-dateutil
