@@ -65,7 +65,7 @@ tzdata==2025.2
     # via pandas
 urllib3==2.5.0
     # via requests
-xlsxwriter==3.2.8
+xlsxwriter==3.2.9
     # via -r requirements.in
 zeep==4.3.1
     # via simple-salesforce
