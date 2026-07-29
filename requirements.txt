@@ -4,8 +4,6 @@
 #
 #    pip-compile --pip-args='--only-binary :all:' requirements.in
 #
---only-binary :all:
-
 attrs==25.3.0
     # via zeep
 certifi==2025.1.31
@@ -14,8 +12,6 @@ cffi==2.1.0
     # via cryptography
 charset-normalizer==3.4.1
     # via requests
-colorama==0.4.6
-    # via tqdm
 cryptography==44.0.2
     # via pyjwt
 idna==3.10
@@ -40,10 +36,6 @@ python-dateutil==2.9.0.post0
     # via pandas
 python-dotenv==1.1.1
     # via -r requirements.in
-pytz==2025.2
-    # via
-    #   pandas
-    #   zeep
 requests==2.32.4
     # via
     #   -r requirements.in
@@ -65,11 +57,9 @@ tqdm==4.67.1
     # via -r requirements.in
 typing-extensions==4.13.2
     # via simple-salesforce
-tzdata==2025.2
-    # via pandas
 urllib3==2.5.0
     # via requests
 xlsxwriter==3.2.8
     # via -r requirements.in
-zeep==4.3.1
+zeep==4.3.3
     # via simple-salesforce
