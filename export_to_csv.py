@@ -83,6 +83,7 @@ def main():
     """
     Example Salesforce batch query. Login using bearer token.
     """
+    load_dotenv()
     sf = login(
         (
             f"{os.getenv('SALESFORCE_INSTANCE_URL')}",
