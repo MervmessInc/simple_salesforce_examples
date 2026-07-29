@@ -14,8 +14,14 @@ def salesforce_login(creds: list) -> Salesforce:
                     for easy use of the Salesforce REST API.
     """
     try:
+        instance = creds[0]
+        if instance.startswith("https://"):
+            instance = instance[8:]
+        elif instance.startswith("http://"):
+            instance = instance[7:]
+
         sf = Salesforce(
-            instance=creds[0],
+            instance=instance,
             session_id=creds[1],
             version="55.0",
         )
